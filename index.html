@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f5ef">
+    <meta name="description" content="Explore IFCT 2017 food-composition data, build a portion-based plate, and compare estimated energy and macronutrients.">
+    <title>What's on my plate?</title>
+    <link rel="stylesheet" href="styles.css?v=mobile-v6">
+    <script src="app.js?v=food-ux-2" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="What's on my plate? home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="16.5" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="20" cy="20" r="11" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M14 21.5c2.7-5.2 8.5-7.7 13-6.8-.4 5.2-4.5 10.3-10.1 10.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16.5 24c1.4-2.7 3.7-4.8 6.8-6.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="brand-name">plate<span>ful</span></span>
+        </a>
+        <div class="topbar-actions">
+          <span class="privacy-note"><span class="privacy-dot"></span> Just for you, on this device</span>
+          <button class="profile-button" id="edit-profile-button" type="button">
+            <span class="profile-button-icon" aria-hidden="true">✳</span>
+            <span id="profile-button-label">Your profile</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="welcome-row" aria-labelledby="page-title">
+          <div class="welcome-copy">
+            <p class="eyebrow"><span class="eyebrow-star" aria-hidden="true">✳</span> IFCT 2017 · PLATE BUILDER</p>
+            <h1 id="page-title">What's on <em>your</em> plate?</h1>
+            <p class="welcome-subtitle">Choose foods from the IFCT catalogue, set portions, and compare their estimated energy and macros.</p>
+          </div>
+          <aside class="daily-card" aria-label="Estimated daily energy">
+            <div class="daily-card-top">
+              <span class="daily-sun" aria-hidden="true">☼</span>
+              <span class="eyebrow">YOUR DAILY ENERGY ESTIMATE</span>
+            </div>
+            <div class="daily-energy">
+              <span id="daily-energy-value">—</span>
+              <span class="daily-unit">kcal / day</span>
+            </div>
+            <p id="daily-energy-caption">Personalized with your details</p>
+          </aside>
+        </section>
+
+        <section class="vitals-row" aria-label="Your energy estimate details">
+          <article class="vital-card">
+            <span class="vital-icon vital-icon-lime" aria-hidden="true">↗</span>
+            <div><p class="vital-label">BODY MASS INDEX</p><p class="vital-value" id="bmi-value">—</p></div>
+            <span class="vital-note" id="bmi-caption">A height-to-weight ratio</span>
+          </article>
+          <article class="vital-card">
+            <span class="vital-icon vital-icon-peach" aria-hidden="true">⌁</span>
+            <div><p class="vital-label">RESTING ENERGY</p><p class="vital-value"><span id="bmr-value">—</span><small> kcal</small></p></div>
+            <span class="vital-note">Estimated basal metabolic rate</span>
+          </article>
+          <article class="vital-card">
+            <span class="vital-icon vital-icon-blue" aria-hidden="true">✳</span>
+            <div><p class="vital-label">THERMIC EFFECT</p><p class="vital-value"><span id="tef-value">—</span><small> kcal</small></p></div>
+            <span class="vital-note">Approx. 10% of daily estimate</span>
+          </article>
+          <p class="vitals-disclaimer">Estimate = Harris–Benedict BMR × activity factor, with thermic effect estimated at 10% of total · learning tool, not medical advice.</p>
+        </section>
+
+        <section class="workspace" aria-label="Plate builder and IFCT food catalogue">
+          <article class="panel plate-panel">
+            <div class="panel-heading plate-heading">
+              <div>
+                <p class="eyebrow"><span class="heading-dot"></span> YOUR PLATE</p>
+                <h2>Build your plate.</h2>
+                <p class="panel-description">Add foods from the catalogue; each serving starts at 100 g.</p>
+              </div>
+              <span class="drag-hint"><span aria-hidden="true">↖</span> Drag or tap to add</span>
+            </div>
+
+            <div class="plate-stage" id="plate-drop-target" tabindex="0" aria-label="Your plate. Drop foods here or add them from the catalogue.">
+              <div class="plate-rim">
+                <div class="plate-center">
+                  <div class="plate-visual" id="plate-visual" role="list" aria-label="Illustrated food portions on your plate"></div>
+                  <div class="empty-plate" id="empty-plate">
+                    <span class="empty-plate-art" aria-hidden="true">
+                      <svg viewBox="0 0 92 76" fill="none">
+                        <path d="M17 46c0-15.8 12.9-28.7 28.7-28.7S74.4 30.2 74.4 46" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 46h73c-1.8 12.5-12.5 21.2-27.8 22.5H37.8C22.5 67.2 11.8 58.5 10 46Z" fill="#e8efdb" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M33 41c2.8-6.3 10.2-10.3 16.8-9.3-1 7.1-6.3 12.4-14 13.6" stroke="#4c7a58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M39 45c2.6-3.6 5.6-6.1 9.4-8" stroke="#4c7a58" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="60.5" cy="38.5" r="4" fill="#f1b773"/>
+                        <circle cx="27" cy="36" r="3" fill="#d98e62"/>
+                      </svg>
+                    </span>
+                    <strong>Your plate is empty.</strong>
+                    <span>Search the IFCT catalogue to add a food.</span>
+                  </div>
+                </div>
+              </div>
+              <span class="plate-sticker plate-sticker-one" aria-hidden="true">mix &amp;<br>match</span>
+              <span class="plate-sticker plate-sticker-two" aria-hidden="true">100 g<br>portions</span>
+            </div>
+            <div class="portion-list" id="plate-items" aria-label="Food portion size controls"></div>
+            <div class="plate-actions">
+              <p class="portion-caption" id="portion-caption"><span aria-hidden="true">↕</span> Food illustrations grow with your serving · adjust in 25 g steps</p>
+              <button class="browse-foods-button" id="browse-foods-button" type="button">Browse foods <span aria-hidden="true">↓</span></button>
+            </div>
+
+            <div class="meal-goal">
+              <div class="meal-goal-heading">
+                <div>
+                  <p class="eyebrow">PLATE ENERGY <span class="goal-separator">·</span> <span id="meal-share-label">30%</span> OF YOUR DAY</p>
+                  <p class="energy-count"><strong id="plate-calories">0</strong><span> / <span id="plate-goal-calories">0</span> kcal</span></p>
+                </div>
+                <label class="share-select-wrap">
+                  <span>Meal share</span>
+                  <select id="meal-share-select" aria-label="Share of daily energy for this plate">
+                    <option value="0.25">25%</option>
+                    <option value="0.3" selected>30%</option>
+                    <option value="0.35">35%</option>
+                    <option value="0.4">40%</option>
+                  </select>
+                </label>
+              </div>
+              <div class="progress-track"><span id="energy-progress"></span></div>
+              <p class="goal-caption" id="goal-caption">A flexible meal-sized starting point, not a prescription.</p>
+            </div>
+
+            <div class="balance-section">
+              <div class="balance-title-row">
+                <div>
+                  <p class="eyebrow">MACRONUTRIENTS</p>
+                  <h3>Your plate's balance</h3>
+                </div>
+                <div class="balance-score"><span id="balance-score">—</span><small>balance<br>score</small></div>
+              </div>
+              <div class="macro-content">
+                <div class="macro-donut" id="macro-donut" role="img" aria-label="Add food to see your macronutrient balance">
+                  <div class="macro-donut-inner"><strong id="macro-count">—</strong><span>macro kcal</span></div>
+                </div>
+                <div class="macro-legend" id="macro-legend">
+                  <div class="macro-row" data-macro="carbs">
+                    <span class="macro-dot macro-dot-carbs"></span><span class="macro-name">Carbs</span>
+                    <span class="macro-share" id="carbs-share">—</span><span class="macro-range">45–55%</span>
+                  </div>
+                  <div class="macro-row" data-macro="protein">
+                    <span class="macro-dot macro-dot-protein"></span><span class="macro-name">Protein</span>
+                    <span class="macro-share" id="protein-share">—</span><span class="macro-range">10–15%</span>
+                  </div>
+                  <div class="macro-row" data-macro="fat">
+                    <span class="macro-dot macro-dot-fat"></span><span class="macro-name">Fat</span>
+                    <span class="macro-share" id="fat-share">—</span><span class="macro-range">20–30%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="balance-note" id="balance-note">Add a food to see how its macros contribute to your plate.</div>
+              <p class="macro-disclaimer">Macro ranges are the targets you asked to explore. They are not a universal FDA prescription. IFCT animal-food entries with unreported carbohydrate are excluded from that macro's total.</p>
+            </div>
+          </article>
+
+          <article class="panel library-panel">
+            <div class="library-heading">
+              <div>
+                <p class="eyebrow"><span class="library-spark" aria-hidden="true">✳</span> PICK YOUR INGREDIENTS</p>
+                <h2>The food library <span class="food-count" id="food-count">542</span></h2>
+                <p class="panel-description">IFCT values per 100 g. Open a profile to see nutrient tables, units, and missing values.</p>
+              </div>
+              <span class="library-illustration" aria-hidden="true">✿</span>
+            </div>
+            <label class="search-box">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="8.8" cy="8.8" r="5.8" stroke="currentColor" stroke-width="1.6"/>
+                <path d="m13.2 13.2 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <input id="food-search" type="search" aria-label="Search the IFCT food catalogue" placeholder="Try rice, mango, dal..." autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+            <div class="filter-row">
+              <label class="filter-label" for="category-filter">Explore</label>
+              <select id="category-filter" aria-label="Filter foods by category">
+                <option value="">All food groups</option>
+              </select>
+              <span class="results-label" id="results-label">542 foods</span>
+            </div>
+            <div class="food-list" id="food-list" aria-live="polite">
+              <div class="food-loading"><span class="loading-dot"></span>Setting the table...</div>
+            </div>
+            <button class="show-more-button" id="show-more-button" type="button" hidden>Show more foods <span aria-hidden="true">↓</span></button>
+            <div class="source-note">
+              <span class="source-mark" aria-hidden="true">i</span>
+              <p>Profiles from Tables 1–12 of the <strong>Indian Food Composition Tables 2017</strong> · ICMR–National Institute of Nutrition. Values are per 100 g edible portion unless noted.</p>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <footer class="page-footer">
+        <span>Nutrition estimates are for learning, not medical advice.</span>
+        <span>Food data: IFCT 2017 · ICMR–National Institute of Nutrition</span>
+      </footer>
+    </div>
+
+    <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-title">
+      <form class="profile-form" id="profile-form">
+        <div class="dialog-topline">
+          <span class="dialog-icon" aria-hidden="true">✳</span>
+          <button class="dialog-close" id="close-profile-button" type="button" aria-label="Close your profile" hidden>×</button>
+        </div>
+        <p class="eyebrow">ENERGY ESTIMATE</p>
+        <h2 id="profile-title">Set up your profile</h2>
+        <p class="dialog-intro">Enter your details to estimate daily energy needs. Your profile stays in this browser.</p>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Age <small>years</small></span>
+            <input name="age" type="number" min="18" max="100" step="1" placeholder="28" required>
+          </label>
+          <label class="field">
+            <span>Harris–Benedict formula</span>
+            <select name="equation" required>
+              <option value="female">Female equation</option>
+              <option value="male">Male equation</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Height <small>cm</small></span>
+            <input name="height" type="number" min="100" max="230" step="0.1" placeholder="165" required>
+          </label>
+          <label class="field">
+            <span>Weight <small>kg</small></span>
+            <input name="weight" type="number" min="30" max="300" step="0.1" placeholder="65" required>
+          </label>
+          <label class="field field-wide">
+            <span>How active are most of your days?</span>
+            <select name="activity" required>
+              <option value="1.2">Mostly sitting · little planned exercise</option>
+              <option value="1.375">A little active · light movement 1–3 days/week</option>
+              <option value="1.55">Fairly active · moderate movement 3–5 days/week</option>
+              <option value="1.725">Very active · hard movement 6–7 days/week</option>
+              <option value="1.9">Extra active · physical job or intense training</option>
+            </select>
+          </label>
+        </div>
+        <p class="form-message" id="form-message" role="alert"></p>
+        <button class="primary-button" type="submit">Save profile <span aria-hidden="true">↗</span></button>
+        <p class="dialog-footnote">For adults · Estimate only; not a clinical assessment.</p>
+      </form>
+    </dialog>
+
+    <dialog class="profile-dialog nutrient-dialog" id="nutrient-dialog" aria-labelledby="nutrient-title">
+      <div class="nutrient-dialog-content">
+        <div class="dialog-topline">
+          <span class="dialog-icon" aria-hidden="true">✳</span>
+          <button class="dialog-close" id="close-nutrient-button" type="button" aria-label="Close nutrient profile">×</button>
+        </div>
+        <p class="eyebrow" id="nutrient-kicker">IFCT 2017 · PER 100 G EDIBLE PORTION</p>
+        <h2 id="nutrient-title"></h2>
+        <p class="nutrient-subtitle" id="nutrient-subtitle"></p>
+        <div class="nutrient-summary" id="nutrient-summary"></div>
+        <p class="nutrient-note">“Below detectable limit” appears only where the IFCT table says so. Other blanks are shown as “Not reported”; compact Table 1 layouts omit some fields entirely.</p>
+        <div class="nutrient-sections" id="nutrient-sections"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
