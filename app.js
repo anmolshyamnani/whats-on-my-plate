@@ -1,6 +1,9 @@
 const STORAGE_KEY = "plateful-state-v1";
 const INITIAL_VISIBLE_FOODS = 18;
 const FOODS_PER_PAGE = 18;
+const FOOD_SEARCH_ALIASES = {
+  D061: ["green pea", "green peas", "fresh pea", "fresh peas", "hare matar"]
+};
 const MACRO_TARGETS = {
   carbs: { min: 45, max: 55, caloriesPerGram: 4 },
   protein: { min: 10, max: 15, caloriesPerGram: 4 },
@@ -294,6 +297,7 @@ function getFilteredFoods() {
     const matchesCategory = !category || food.category === category;
     const matchesQuery = !query
       || food.name.toLocaleLowerCase().includes(query)
+      || (FOOD_SEARCH_ALIASES[food.code] || []).some((alias) => alias.includes(query))
       || food.code.toLocaleLowerCase().includes(query)
       || food.category.toLocaleLowerCase().includes(query);
     return matchesCategory && matchesQuery;

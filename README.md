@@ -16,6 +16,7 @@ On the computer, open <http://localhost:4173>. To use it on a phone, connect the
 
 - The bundled `data/ifct-foods.json` contains all **528 coded foods** from Table 1, their available nutrient profiles from Tables 2–11, and **14 edible-oil profiles** from Table 12 of the **Indian Food Composition Tables 2017**, published by ICMR–National Institute of Nutrition. The source PDF is not included in this public repository.
 - Nutrient profiles open from the **Profile** button on any food card. Profiles are grouped by source table and retain the printed units. Most values are per 100 g edible portion; amino-acid values are per 100 g protein, and Table 12 oil fatty-acid values are percentages of total fatty acids. Blank, unreported, and layout-omitted values are not invented.
+- IFCT lists green peas as **Peas, fresh (D061)**; search also recognizes “green peas,” “fresh peas,” and “hare matar.”
 - Table 12 lists fatty acids but not energy or macronutrients, so its 14 oil entries are profile-only and cannot be added to the calorie-balanced plate. Table 1 entries remain plate-addable; if carbohydrate is not reported for an item, the plate leaves it out of the carbohydrate share.
 - The plate and catalogue use category- and name-matched emoji illustrations, not food photographs. Each plate icon scales with serving weight, and the icons redistribute when foods or portions change.
 - Added portions are marked on their catalogue cards with the selected gram weight; source food code and category remain visible so each item can be traced to its IFCT profile.
