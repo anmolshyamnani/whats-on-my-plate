@@ -1,4 +1,5 @@
 IFCT2017.pdf
 .vercel/
+.env*
 __pycache__/
 *.py[cod]
